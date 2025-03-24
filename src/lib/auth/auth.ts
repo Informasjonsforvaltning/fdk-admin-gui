@@ -40,7 +40,8 @@ export class Auth {
     async ({ loginRequired }) => {
       const keycloakInitOptions: KeycloakInitOptions = {
         onLoad: 'check-sso',
-        silentCheckSsoRedirectUri: this.conf.silentCheckSsoRedirectUri
+        silentCheckSsoRedirectUri: this.conf.silentCheckSsoRedirectUri,
+        checkLoginIframe: false
       };
       await this.kc.init(keycloakInitOptions).catch(() => {});
       if (loginRequired && !this.isAuthenticated()) {
