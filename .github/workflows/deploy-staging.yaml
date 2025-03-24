@@ -26,6 +26,4 @@ jobs:
     if: ${{ github.actor == 'dependabot[bot]' && github.event_name == 'pull_request' }}
     uses: Informasjonsforvaltning/workflows/.github/workflows/build.yaml@main
     with:
-      dockerfile: dev.Dockerfile
-    secrets:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      dockerfile: dev.Dockerfile    
