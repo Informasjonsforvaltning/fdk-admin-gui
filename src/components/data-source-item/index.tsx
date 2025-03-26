@@ -12,13 +12,10 @@ import ApiIcon from '../../images/api-icon.svg';
 import ServiceIcon from '../../images/service-icon.svg';
 import ImportIcon from '../../images/import-icon.svg';
 import EditIcon from '../../images/edit-icon.svg';
-import CheckIcon from '../../images/check-icon.svg';
 import RemoveIcon from '../../images/remove-circle-icon.svg';
 
 import type { DataSource, Organization } from '../../types';
-import { DataType, Shapes } from '../../types/enums';
-
-import env from '../../env';
+import { DataType } from '../../types/enums';
 
 interface Props {
   dataSourceItem: DataSource;
@@ -28,8 +25,6 @@ interface Props {
   onDataSourceItemEdit: (id: string, organizationId: string) => void;
   onDataSourceItemRemove: (id: string, organizationId: string) => void;
 }
-
-const { FDK_BASE_URI } = env;
 
 const DataSourceItem: FC<Props> = ({
   dataSourceItem: {
@@ -42,7 +37,6 @@ const DataSourceItem: FC<Props> = ({
   },
   organization,
   onDataSourceItemHarvest,
-  onDataSourceHarvestStatus,
   onDataSourceItemEdit,
   onDataSourceItemRemove
 }) => {
@@ -126,12 +120,6 @@ const DataSourceItem: FC<Props> = ({
         <ImportIcon />
         Høst
       </SC.HarvestButton>
-      <SC.HarvestButton
-        onClick={() => onDataSourceHarvestStatus(id, publisherId)}
-        $dataType={dataType}
-      >
-        Høstestatus
-      </SC.HarvestButton>
       <SC.EditButton
         onClick={() => onDataSourceItemEdit(id, publisherId)}
         variant={Variant.SECONDARY}
@@ -140,18 +128,6 @@ const DataSourceItem: FC<Props> = ({
         <EditIcon />
         Rediger
       </SC.EditButton>
-      <SC.ValidateLink
-        to={{
-          pathname: `${FDK_BASE_URI}/validator?data=${encodeURIComponent(
-            url
-          )}&shapes=${encodeURIComponent(Shapes.DCAT_AP_NO_V2)}`
-        }}
-        target='_blank'
-        $dataType={dataType}
-      >
-        <CheckIcon />
-        Valider
-      </SC.ValidateLink>
 
       <SC.TertiaryButton
         onClick={() => onDataSourceItemRemove(id, publisherId)}
