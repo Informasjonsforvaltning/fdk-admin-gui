@@ -13,6 +13,7 @@ jobs:
     with:
       app_name: fdk-admin-gui
       environment: prod
+      gh_environment: prod
       cluster: digdir-fdk-prod
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -27,6 +28,7 @@ jobs:
     with:
       app_name: fdk-admin-gui
       environment: demo
+      gh_environment: demo
       cluster: digdir-fdk-dev
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
