@@ -14,6 +14,7 @@ jobs:
     with:
       app_name: fdk-admin-gui
       environment: staging
+      gh_environment: staging
       cluster: digdir-fdk-dev
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
