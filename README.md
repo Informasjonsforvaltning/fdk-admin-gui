@@ -1,59 +1,44 @@
 # FDK Admin GUI
 
-## Description
+A web application for managing harvesting datasources, allowing users to add, edit, delete, and trigger harvesting.
 
-An administration application for Fellesdatakatalog.
+For a broader understanding of the system’s context, refer to the [architecture documentation](https://github.com/Informasjonsforvaltning/architecture-documentation) wiki. For more specific
+context on this application, see the [Harvesting](https://github.com/Informasjonsforvaltning/architecture-documentation/wiki/Architecture-documentation#harvesting) subsystem section.
 
-## Installation and Usage
+## Getting started
 
-- Required tools to run this project:
-  - Node.js and npm to run locally on a host machine
-  - Docker and Docker Compose to run locally in a container
+### Prerequisites
+- [Node.js](https://nodejs.org/en/download/) >=18.16
+- [npm](https://www.npmjs.com/get-npm) >=10.2.3
+- [Docker](https://www.docker.com/get-started)
+- [docker-compose](https://docs.docker.com/compose/install/)
 
-#### Running application locally on a host machine
+### Running locally (development)
 
-- Install dependencies by running `npm install`
-- Run `npm start` to start local development server
+Clone the repository:
 
-#### Running application in a Docker container
+```bash
+git clone https://github.com/Informasjonsforvaltning/fdk-admin-gui.git
+cd fdk-admin-gui
+```
 
-- Build a Docker container using the following command:
-  - `docker build -t fdk-admin-gui .`
-- Run the container using the following comand:
-  - `docker run -d -p 8137:8080 -e ENV -e OIDC_ISSUER -e FDK_HARVEST_ADMIN_HOST -e ORGANIZATION_CATALOG_URI fdk-admin-gui`
+Install dependencies:
 
-#### Running application using Docker Compose
+```bash
+npm install
+```
 
-- Run the application using the following command:
-  - `docker-compose up -d`
+Start the development server:
 
-## Environment Variables
+```bash
+npm run start
+```
 
-- `ENV` - Environment
-  - `development`
-  - `production`
-- `OIDC_ISSUER` - OIDC issuer URI
-- `FDK_BASE_URI` - FDK Base URI
-- `FDK_HARVEST_ADMIN_HOST` - fdk-harvest-admin API hostname
-- `FDK_REGISTRATION_BASE_URI` - Base URI of the FDK registration application
-- `ORGANIZATION_CATALOG_URI` - organization-catalog API hostname
-- `FDK_CMS_BASE_URI` - dk-cms hostname
+Go to http://localhost:8080
 
-## Contributing
+### Run locally using docker compose
+```bash
+docker compose up -d --build
+```
 
-#### Branching Strategy
-
-Whenever a new change is to be implemented, follow these steps:
-
-- Create a new branch from the master branch
-- Implement and commit changes
-- Create a pull request for code review
-
-#### Commits
-
-This repository uses conventional commmit format. In order to commit, follow these steps:
-
-- Stage files to be committed
-- Run `npm run commit` script
-
-Do not use `--no-verify` flag when making commits.
+Go to http://localhost:8137
