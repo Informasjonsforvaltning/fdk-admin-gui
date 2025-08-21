@@ -59,7 +59,9 @@
     }
   },
   "overrides": {
-    "axios": "^1.7.2"
+    "axios": "^1.7.2",
+    "form-data": "^4.0.4",
+    "tmp": "^0.2.5"
   },
   "dependencies": {
     "@apollo/client": "^3.8.4",
