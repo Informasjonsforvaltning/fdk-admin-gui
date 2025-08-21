@@ -26,8 +26,10 @@ const configuration: Configuration = mergeWithCustomize<Configuration>({
     host: '0.0.0.0',
     port: 8137,
     hot: true,
-    onBeforeSetupMiddleware: devServer =>
-      devServer.app.get('/config.js', (_, res) => res.status(204).send()),
+    setupMiddlewares: (middlewares, devServer) => {
+      devServer.app?.get('/config.js', (_, res) => res.status(204).send());
+      return middlewares;
+    },
     historyApiFallback: {
       rewrites: [{ from: /./, to: '/index.html' }]
     }
@@ -71,16 +73,10 @@ const configuration: Configuration = mergeWithCustomize<Configuration>({
       },
       {
         test: /\.(png|jpg|gif)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[name].[ext]',
-              outputPath: 'images',
-              publicPath: 'images'
-            }
-          }
-        ]
+        type: 'asset/resource',
+        generator: {
+          filename: 'images/[name].[ext]'
+        }
       },
       {
         test: /\.js$/,
@@ -106,7 +102,7 @@ const configuration: Configuration = mergeWithCustomize<Configuration>({
       },
       {
         test: /\.(woff|woff2|ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        loader: 'file-loader',
+        type: 'asset/resource',
         exclude: [resolve(__dirname, '..', 'src', 'images')]
       }
     ]
