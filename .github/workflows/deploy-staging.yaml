@@ -7,6 +7,7 @@ on:
     types: [ready_for_review, opened, reopened, synchronize]
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   build-and-deploy-staging:
@@ -22,7 +23,6 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       DIGDIR_FDK_AUTODEPLOY: ${{ secrets.DIGDIR_FDK_DEV_AUTODEPLOY }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      DEPENDABOT_SLACK_WEBHOOK_URL: ${{ secrets.DEPENDABOT_SLACK_WEBHOOK_URL }}
 
   build-dev-image:
     name: Build and test dev image on PR from dependabot
