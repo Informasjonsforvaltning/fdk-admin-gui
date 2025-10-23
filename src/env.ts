@@ -6,7 +6,7 @@ export default validateEnv(
   (window as any).env ?? {
     ENV: Environment.DEVELOPMENT,
     OIDC_ISSUER:
-      'https://sso.staging.fellesdatakatalog.digdir.no/auth/realms/fdk',
+      'https://keycloak.staging.fellesdatakatalog.digdir.no/realms/fdk',
     FDK_BASE_URI: 'https://staging.fellesdatakatalog.digdir.no',
     FDK_HARVEST_ADMIN_HOST:
       'https://admin-api.staging.fellesdatakatalog.digdir.no',
