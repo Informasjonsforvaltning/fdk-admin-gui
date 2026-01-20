@@ -8,7 +8,7 @@ context on this application, see the [Harvesting](https://github.com/Informasjon
 ## Getting started
 
 ### Prerequisites
-- [Node.js](https://nodejs.org/en/download/) >=18.16
+- [Node.js](https://nodejs.org/en/download/) >=22
 - [npm](https://www.npmjs.com/get-npm) >=10.2.3
 - [Docker](https://www.docker.com/get-started)
 - [docker-compose](https://docs.docker.com/compose/install/)
