@@ -40,3 +40,10 @@ export interface StatusForDataType {
 }
 
 export type SnackbarVariant = 'harvest:success' | 'harvest:error';
+
+export interface ServiceMessage {
+  documentId: string;
+  title: string;
+  short_description: string;
+  message_type: string;
+}

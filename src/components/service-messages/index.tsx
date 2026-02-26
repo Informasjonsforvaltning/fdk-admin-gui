@@ -4,7 +4,7 @@ import { Severity } from '@fellesdatakatalog/alert';
 
 import env from '../../env';
 
-import { ServiceMessage } from '../../services/api/strapi/generated/graphql';
+import { ServiceMessage } from '../../types';
 
 import SC from './styled';
 
