@@ -11,11 +11,8 @@ import ErrorIcon from '@material-ui/icons/Error';
 import CloseIcon from '@material-ui/icons/Close';
 
 import Skeleton from 'react-loading-skeleton';
-import {
-  useGetServiceMessagesQuery,
-  ServiceMessage,
-  Enum_Servicemessage_Environment
-} from '../../../../services/api/strapi/generated/graphql';
+
+import { getServiceMessages } from '../../../../api/cms/service-message';
 
 import ConfirmDialog from '../../../confirm-dialog';
 import NoResultIcon from '../../../../images/no-result-icon.svg';
@@ -40,6 +37,7 @@ import {
   Filter,
   HarvestStatus,
   Organization,
+  ServiceMessage,
   SnackbarVariant
 } from '../../../../types';
 import withDataSources from '../../../with-data-sources';
@@ -94,29 +92,45 @@ const DataSourcesPage: FC<Props> = ({
   const [dataSourceId, setDataSourceId] = useState<string | null>(null);
   const [dataSourceOrg, setDataSourceOrg] = useState<string | null>(null);
 
-  const date = new Date();
-  const now_utc = Date.UTC(
-    date.getUTCFullYear(),
-    date.getUTCMonth(),
-    date.getUTCDate(),
-    date.getUTCHours(),
-    date.getUTCMinutes(),
-    date.getUTCSeconds()
-  );
-  let serviceMessageEnv = Enum_Servicemessage_Environment.Production;
-  if (window.location.hostname.match('localhost|staging')) {
-    serviceMessageEnv = Enum_Servicemessage_Environment.Staging;
-  }
-  if (window.location.hostname.match('demo')) {
-    serviceMessageEnv = Enum_Servicemessage_Environment.Demo;
-  }
-  const { data } = useGetServiceMessagesQuery({
-    variables: {
-      today: new Date(now_utc),
-      env: serviceMessageEnv
+  const [serviceMessages, setServiceMessages] = useState<ServiceMessage[]>([]);
+
+  useEffect(() => {
+    const date = new Date();
+    const nowUtc = new Date(
+      Date.UTC(
+        date.getUTCFullYear(),
+        date.getUTCMonth(),
+        date.getUTCDate(),
+        date.getUTCHours(),
+        date.getUTCMinutes(),
+        date.getUTCSeconds()
+      )
+    );
+    let serviceMessageEnv = 'production';
+    if (window.location.hostname.match('localhost|staging')) {
+      serviceMessageEnv = 'staging';
     }
-  });
-  const serviceMessages = data?.serviceMessages as ServiceMessage[];
+    if (window.location.hostname.match('demo')) {
+      serviceMessageEnv = 'demo';
+    }
+
+    const fetchMessages = async () => {
+      try {
+        const response = await getServiceMessages({
+          'filters[valid_from][$lte]': nowUtc.toISOString(),
+          'filters[valid_to][$gte]': nowUtc.toISOString(),
+          'filters[channel_adminportal][$eq]': true,
+          'filters[environment][$eq]': serviceMessageEnv,
+          sort: 'valid_from:desc'
+        });
+        setServiceMessages(response?.data ?? []);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchMessages();
+  }, []);
 
   const showDataSourceItemEditor = (id?: string, organizationId?: string) => {
     document.body.classList.add('no-scroll');
