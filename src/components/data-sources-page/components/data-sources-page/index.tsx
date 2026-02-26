@@ -152,18 +152,6 @@ const DataSourcesPage: FC<Props> = ({
     setDataSourceOrg(null);
   };
 
-  const fetchDataSources = () => {
-    if (!dataSources.length) {
-      fetchDataSourcesRequested();
-    }
-  };
-
-  const fetchOrganizations = () => {
-    if (!organizations.length) {
-      fetchOrganizationsRequested();
-    }
-  };
-
   const getOrganization = (id: string) =>
     organizations.find(({ organizationId }) => organizationId === id);
 
@@ -178,7 +166,7 @@ const DataSourcesPage: FC<Props> = ({
       registerDataSourceRequested(dataSource);
     }
     hideDataSourceItemEditor();
-    fetchOrganizations();
+    fetchOrganizationsRequested();
   };
 
   const harvestDataSourceItem = (id: string, organizationId: string) => {
@@ -283,8 +271,10 @@ const DataSourcesPage: FC<Props> = ({
     }
   }, [snackbarVariant]);
 
-  fetchDataSources();
-  fetchOrganizations();
+  useEffect(() => {
+    fetchDataSourcesRequested();
+    fetchOrganizationsRequested();
+  }, []);
 
   return (
     <SC.DataSourcesPage>
