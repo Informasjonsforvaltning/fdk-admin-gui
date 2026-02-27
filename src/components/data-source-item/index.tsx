@@ -2,6 +2,7 @@ import React, { memo, FC } from 'react';
 import { compose } from 'redux';
 import { Variant } from '@fellesdatakatalog/button';
 import Link from '@fellesdatakatalog/link';
+import InfoIcon from '@material-ui/icons/Info';
 
 import SC from './styled';
 
@@ -14,12 +15,17 @@ import ImportIcon from '../../images/import-icon.svg';
 import EditIcon from '../../images/edit-icon.svg';
 import RemoveIcon from '../../images/remove-circle-icon.svg';
 
-import type { DataSource, Organization } from '../../types';
+import type {
+  DataSource,
+  HarvestCurrentState,
+  Organization
+} from '../../types';
 import { DataType } from '../../types/enums';
 
 interface Props {
   dataSourceItem: DataSource;
   organization?: Organization;
+  harvestStates?: HarvestCurrentState[];
   onDataSourceItemHarvest: (id: string, organizationId: string) => void;
   onDataSourceHarvestStatus: (id: string, organizationId: string) => void;
   onDataSourceItemEdit: (id: string, organizationId: string) => void;
@@ -36,7 +42,9 @@ const DataSourceItem: FC<Props> = ({
     publisherId
   },
   organization,
+  harvestStates,
   onDataSourceItemHarvest,
+  onDataSourceHarvestStatus,
   onDataSourceItemEdit,
   onDataSourceItemRemove
 }) => {
@@ -111,8 +119,34 @@ const DataSourceItem: FC<Props> = ({
     }
   };
 
+  const statusLabels: Record<string, string> = {
+    IN_PROGRESS: 'Pågår',
+    COMPLETED: 'Fullført',
+    FAILED: 'Feilet'
+  };
+  const states = harvestStates ?? [];
+  const stateForType = states.find(
+    s => s.dataType?.toLowerCase() === dataType?.toLowerCase()
+  );
+  const anyState = states[0];
+  const displayState = stateForType ?? anyState;
+  let statusLabel: string | null = null;
+  if (displayState) {
+    statusLabel = displayState.errorMessage
+      ? 'Feilet'
+      : statusLabels[displayState.status] ?? displayState.status;
+  }
+
   const DatasetItemControls = () => (
     <SC.DatasetItemControls>
+      {statusLabel && (
+        <SC.StatusBadge
+          $dataType={dataType}
+          $hasError={!!displayState?.errorMessage}
+        >
+          {statusLabel}
+        </SC.StatusBadge>
+      )}
       <SC.HarvestButton
         onClick={() => onDataSourceItemHarvest(id, publisherId)}
         $dataType={dataType}
@@ -120,6 +154,14 @@ const DataSourceItem: FC<Props> = ({
         <ImportIcon />
         Høst
       </SC.HarvestButton>
+      <SC.StatusButton
+        onClick={() => onDataSourceHarvestStatus(id, publisherId)}
+        variant={Variant.SECONDARY}
+        $dataType={dataType}
+      >
+        <InfoIcon />
+        Status
+      </SC.StatusButton>
       <SC.EditButton
         onClick={() => onDataSourceItemEdit(id, publisherId)}
         variant={Variant.SECONDARY}

@@ -5,11 +5,10 @@ import { Environment } from './types/enums';
 export default validateEnv(
   (window as any).env ?? {
     ENV: Environment.DEVELOPMENT,
-    OIDC_ISSUER:
-      'https://sso.staging.fellesdatakatalog.digdir.no/auth/realms/fdk',
+    OIDC_ISSUER: 'https://auth.staging.fellesdatakatalog.digdir.no/realms/fdk',
     FDK_BASE_URI: 'https://staging.fellesdatakatalog.digdir.no',
     FDK_HARVEST_ADMIN_HOST:
-      'https://admin-api.staging.fellesdatakatalog.digdir.no',
+      'https://harvest-admin.api.staging.fellesdatakatalog.digdir.no',
     FDK_REGISTRATION_BASE_URI:
       'https://registrering.staging.fellesdatakatalog.digdir.no',
     ORGANIZATION_CATALOG_URI:

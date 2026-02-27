@@ -7,9 +7,9 @@ services:
       - 8137:8080
     environment:
       - ENV=development
-      - OIDC_ISSUER=https://sso.staging.fellesdatakatalog.digdir.no/auth/realms/fdk
+      - OIDC_ISSUER=https://auth.staging.fellesdatakatalog.digdir.no/realms/fdk
       - FDK_BASE_URI=https://staging.fellesdatakatalog.digdir.no
-      - FDK_HARVEST_ADMIN_HOST=https://admin-api.staging.fellesdatakatalog.digdir.no
+      - FDK_HARVEST_ADMIN_HOST=https://harvest-admin.api.staging.fellesdatakatalog.digdir.no
       - FDK_REGISTRATION_BASE_URI=https://registrering.fellesdatakatalog.digdir.no
       - ORGANIZATION_CATALOG_URI=https://organization-catalog.staging.fellesdatakatalog.digdir.no
       - FDK_CMS_BASE_URI=https://cms.fellesdatakatalog.digdir.no

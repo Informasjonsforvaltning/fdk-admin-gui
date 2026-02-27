@@ -2,6 +2,8 @@ import {
   FETCH_DATA_SOURCES_FAILED,
   FETCH_DATA_SOURCES_REQUESTED,
   FETCH_DATA_SOURCES_SUCCEEDED,
+  FETCH_DATASOURCE_STATUS_FAILED,
+  FETCH_DATASOURCE_STATUS_SUCCEEDED,
   HARVEST_DATA_SOURCE_FAILED,
   HARVEST_DATA_SOURCE_REQUESTED,
   HARVEST_DATA_SOURCE_SUCCEEDED,
@@ -19,7 +21,7 @@ import {
   UPDATE_DATA_SOURCE_SUCCEEDED
 } from './action-types';
 
-import type { DataSource, HarvestStatus } from '../../../types';
+import type { DataSource, HarvestCurrentState } from '../../../types';
 
 export function fetchDataSourcesRequested() {
   return {
@@ -80,11 +82,15 @@ export function harvestStatusRequested(id: string, org: string) {
   };
 }
 
-export function harvestStatusSucceeded(status: HarvestStatus) {
+export function harvestStatusSucceeded(
+  id: string,
+  states: HarvestCurrentState[]
+) {
   return {
     type: HARVEST_STATUS_SUCCEEDED,
     payload: {
-      status
+      id,
+      states
     }
   };
 }
@@ -93,6 +99,29 @@ export function harvestStatusFailed(message: string) {
   return {
     type: HARVEST_STATUS_FAILED,
     payload: {
+      message
+    }
+  };
+}
+
+export function fetchDataSourceStatusSucceeded(
+  id: string,
+  states: HarvestCurrentState[]
+) {
+  return {
+    type: FETCH_DATASOURCE_STATUS_SUCCEEDED,
+    payload: {
+      id,
+      states
+    }
+  };
+}
+
+export function fetchDataSourceStatusFailed(id: string, message: string) {
+  return {
+    type: FETCH_DATASOURCE_STATUS_FAILED,
+    payload: {
+      id,
       message
     }
   };
