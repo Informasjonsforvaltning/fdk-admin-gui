@@ -123,6 +123,11 @@ const DataSourceDetail = styled.div<Props>`
     }
   }};
 
+  & > span:last-of-type {
+    word-break: break-all;
+    overflow-wrap: anywhere;
+  }
+
   & > span:first-of-type {
     margin-right: 10px;
     width: 100px;
