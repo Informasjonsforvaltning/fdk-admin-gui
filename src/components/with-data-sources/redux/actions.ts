@@ -47,12 +47,17 @@ export function fetchDataSourcesFailed(message: string) {
   };
 }
 
-export function harvestDataSourceRequested(id: string, org: string) {
+export function harvestDataSourceRequested(
+  id: string,
+  org: string,
+  options?: { removeAll?: boolean; forced?: boolean }
+) {
   return {
     type: HARVEST_DATA_SOURCE_REQUESTED,
     payload: {
       id,
-      org
+      org,
+      ...options
     }
   };
 }

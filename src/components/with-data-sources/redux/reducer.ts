@@ -71,7 +71,7 @@ export default function reducer(
     case HARVEST_DATA_SOURCE_FAILED:
       return state.set('snackbarVariant', 'harvest:error');
     case HARVEST_STATUS_REQUESTED:
-      return state.set('harvestStatus', undefined);
+      return state;
     case FETCH_DATASOURCE_STATUS_SUCCEEDED:
       return state.setIn(
         ['datasourceStatuses', action.payload.id],

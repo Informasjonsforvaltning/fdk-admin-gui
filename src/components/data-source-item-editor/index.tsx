@@ -318,33 +318,6 @@ const DataSourceItemEditor: FC<Props> = ({
               />
               <SC.ErrorMessage name='url' component='div' />
             </SC.FieldSet>
-            <SC.FieldSet>
-              <SC.FieldHeader>
-                <div>
-                  <h2>Autentisering - HTTP Header</h2>
-                </div>
-                <div>Oppgi navn og verdi til autentiseringsheaderen.</div>
-              </SC.FieldHeader>
-              <input
-                type='text'
-                name='authHeader.name'
-                placeholder='F.eks. X-API-KEY'
-                value={values.authHeader?.name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <SC.ErrorMessage name='url' component='div' />
-              <input
-                type='text'
-                name='authHeader.value'
-                placeholder='F.eks. 7085e14c-0e9a-4953-ae53-c68e1c54e458'
-                value={values.authHeader?.value}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <SC.ErrorMessage name='url' component='div' />
-            </SC.FieldSet>
-
             <SC.ModalActions>
               <Button
                 type='submit'

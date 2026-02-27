@@ -80,7 +80,7 @@ function* fetchDataSourcesRequested() {
 }
 
 function* harvestDataSourceRequested({
-  payload: { id, org }
+  payload: { id, org, removeAll, forced }
 }: ReturnType<typeof actions.harvestDataSourceRequested>) {
   try {
     const auth = yield getContext('auth');
@@ -88,7 +88,10 @@ function* harvestDataSourceRequested({
     const { message, status } = yield call(
       axios.post,
       `${FDK_HARVEST_ADMIN_HOST}/organizations/${org}/datasources/${id}/start-harvesting`,
-      {},
+      {
+        removeAll: removeAll ?? false,
+        forced: forced ?? false
+      },
       {
         headers: {
           authorization

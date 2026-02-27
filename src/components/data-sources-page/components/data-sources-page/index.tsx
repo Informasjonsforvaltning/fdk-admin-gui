@@ -186,7 +186,10 @@ const DataSourcesPage: FC<Props> = ({
   };
 
   const harvestDataSourceItem = (id: string, organizationId: string) => {
-    harvestDataSourceRequested(id, organizationId);
+    harvestDataSourceRequested(id, organizationId, {
+      removeAll: false,
+      forced: true
+    });
   };
 
   const showDataSourceItemHarvestStatus = (
@@ -207,9 +210,20 @@ const DataSourcesPage: FC<Props> = ({
     setDataSourceOrg(null);
   };
 
-  const removeDataSourceItem = () => {
+  const removeDataSourceAndKeepResources = () => {
     if (dataSourceId && dataSourceOrg) {
       hideConfirm();
+      removeDataSourceRequested(dataSourceId, dataSourceOrg);
+    }
+  };
+
+  const removeDataSourceAndRemoveAllResources = () => {
+    if (dataSourceId && dataSourceOrg) {
+      hideConfirm();
+      harvestDataSourceRequested(dataSourceId, dataSourceOrg, {
+        removeAll: true,
+        forced: true
+      });
       removeDataSourceRequested(dataSourceId, dataSourceOrg);
     }
   };
@@ -286,6 +300,27 @@ const DataSourcesPage: FC<Props> = ({
       showSnackbar();
     }
   }, [snackbarVariant]);
+
+  useEffect(() => {
+    let intervalId: number | undefined;
+
+    if (showHarvestStatusModal && dataSourceId && dataSourceOrg) {
+      intervalId = window.setInterval(() => {
+        harvestStatusRequested(dataSourceId, dataSourceOrg);
+      }, 5000);
+    }
+
+    return () => {
+      if (intervalId) {
+        window.clearInterval(intervalId);
+      }
+    };
+  }, [
+    showHarvestStatusModal,
+    dataSourceId,
+    dataSourceOrg,
+    harvestStatusRequested
+  ]);
 
   useEffect(() => {
     fetchDataSourcesRequested();
@@ -373,10 +408,13 @@ const DataSourcesPage: FC<Props> = ({
         )}
         {showConfirmModal && (
           <ConfirmDialog
-            title='Bekreft sletting'
-            text='Bekreft at du vil slette denne datakilden.'
-            onConfirm={removeDataSourceItem}
+            title='Slett datakilde'
+            text='Velg hva som skal skje med ressursene som er høstet fra denne datakilden.'
+            onConfirm={removeDataSourceAndRemoveAllResources}
             onCancel={hideConfirm}
+            confirmLabel='Slett og fjern alle ressurser'
+            secondaryActionLabel='Slett, men behold ressurser'
+            onSecondaryAction={removeDataSourceAndKeepResources}
           />
         )}
       </SC.Container>
