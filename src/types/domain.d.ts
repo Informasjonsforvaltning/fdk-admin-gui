@@ -26,17 +26,36 @@ export interface Filter {
   dataType?: DataType;
 }
 
-export interface HarvestStatus {
-  id: string;
-  statuses: Array<StatusForDataType>;
+/** Current harvest state from GET /organizations/{org}/datasources/{id}/status */
+export interface HarvestCurrentState {
+  dataSourceId: string;
+  dataType: string;
+  currentPhase?: string;
+  phaseStartedAt?: string;
+  lastEventTimestamp?: number;
+  errorMessage?: string;
+  totalResources?: number;
+  processedResources?: number;
+  remainingResources?: number;
+  phaseEventCounts?: PhaseEventCounts;
+  changedResourcesCount?: number;
+  removedResourcesCount?: number;
+  removeAll?: boolean;
+  forced?: boolean;
+  status: 'IN_PROGRESS' | 'COMPLETED' | 'FAILED';
+  createdAt?: string;
+  updatedAt?: string;
 }
 
-export interface StatusForDataType {
-  harvestType: string;
-  status: string;
-  startTime: string;
-  endTime: string;
-  errorMessage: string;
+export interface PhaseEventCounts {
+  initiatingEventsCount?: number;
+  harvestingEventsCount?: number;
+  reasoningEventsCount?: number;
+  rdfParsingEventsCount?: number;
+  resourceProcessingEventsCount?: number;
+  searchProcessingEventsCount?: number;
+  aiSearchProcessingEventsCount?: number;
+  sparqlProcessingEventsCount?: number;
 }
 
 export type SnackbarVariant = 'harvest:success' | 'harvest:error';

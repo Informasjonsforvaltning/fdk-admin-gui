@@ -35,7 +35,7 @@ import ServiceMessages from '../../../service-messages';
 import {
   DataSource,
   Filter,
-  HarvestStatus,
+  HarvestCurrentState,
   Organization,
   ServiceMessage,
   SnackbarVariant
@@ -48,7 +48,8 @@ interface Props {
   authService: Auth;
   fetchingDataSources: boolean;
   dataSources: DataSource[];
-  harvestStatus?: HarvestStatus;
+  harvestStatus?: HarvestCurrentState[];
+  datasourceStatuses: Record<string, HarvestCurrentState[]>;
   snackbarVariant?: SnackbarVariant;
   dataSourceActions: typeof DataSourceActions;
   organizations: Organization[];
@@ -72,6 +73,7 @@ const DataSourcesPage: FC<Props> = ({
   fetchingDataSources,
   dataSources,
   harvestStatus,
+  datasourceStatuses,
   snackbarVariant,
   dataSourceActions: {
     fetchDataSourcesRequested,
@@ -124,8 +126,8 @@ const DataSourcesPage: FC<Props> = ({
           sort: 'valid_from:desc'
         });
         setServiceMessages(response?.data ?? []);
-      } catch (error) {
-        console.error(error);
+      } catch {
+        // Service messages fetch failed - non-critical, continue without
       }
     };
 
@@ -320,6 +322,7 @@ const DataSourcesPage: FC<Props> = ({
                 key={dataSourceItem.id}
                 dataSourceItem={dataSourceItem}
                 organization={getOrganization(dataSourceItem.publisherId)}
+                harvestStates={datasourceStatuses[dataSourceItem.id]}
                 onDataSourceItemHarvest={harvestDataSourceItem}
                 onDataSourceHarvestStatus={showDataSourceItemHarvestStatus}
                 onDataSourceItemEdit={showDataSourceItemEditor}
@@ -363,10 +366,8 @@ const DataSourcesPage: FC<Props> = ({
         )}
         {showHarvestStatusModal && (
           <HarvestStatusModal
-            name={
-              dataSources.find(ds => ds.id === harvestStatus?.id)?.description
-            }
-            harvestStatus={harvestStatus}
+            name={dataSources.find(ds => ds.id === dataSourceId)?.description}
+            harvestStates={harvestStatus}
             onDiscard={hideDataSourceItemHarvestStatus}
           />
         )}

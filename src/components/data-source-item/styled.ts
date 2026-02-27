@@ -7,6 +7,7 @@ import { DataType } from '../../types/enums';
 
 interface Props {
   $dataType?: DataType | null;
+  $hasError?: boolean;
 }
 
 const DataSourceItem = styled.li`
@@ -160,6 +161,87 @@ const SecondaryButton = styled(ButtonBase)`
 `;
 
 const HarvestButton = styled(SecondaryButton)<Props>`
+  ${({ $dataType }) => {
+    switch ($dataType) {
+      case DataType.CONCEPT:
+        return css`
+          background: #d5edf2;
+          color: #2e6773;
+          & > svg > path {
+            fill: #2e6773;
+          }
+        `;
+      case DataType.DATASERVICE:
+        return css`
+          background: #f2e1d5;
+          color: #805333;
+          & > svg > path {
+            fill: #805333;
+          }
+        `;
+      case DataType.DATASET:
+        return css`
+          background: #d5e1f2;
+          color: #335380;
+          & > svg > path {
+            fill: #335380;
+          }
+        `;
+      case DataType.INFORMATION_MODEL:
+        return css`
+          background: #e4d5f2;
+          color: #593380;
+          & > svg > path {
+            fill: #593380;
+          }
+        `;
+      case DataType.PUBLIC_SERVICE:
+        return css`
+          background: #f2d5e1;
+          color: #803353;
+          & > svg > path {
+            fill: #803353;
+          }
+        `;
+      default:
+        return css``;
+    }
+  }};
+
+  &:hover,
+  &:focus {
+    color: ${theme.colour(Colour.NEUTRAL, 'N0')};
+
+    & > svg > path {
+      fill: ${theme.colour(Colour.NEUTRAL, 'N0')};
+    }
+  }
+`;
+
+const StatusBadge = styled.span<Props>`
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: ${theme.fontSize('FS14')};
+  font-weight: ${theme.fontWeight('FW500')};
+  margin-right: 10px;
+
+  ${({ $hasError }) => {
+    const baseStyles = $hasError
+      ? css`
+          background: #ffebee;
+          color: #c62828;
+        `
+      : css`
+          background: #e8f5e9;
+          color: #2e7d32;
+        `;
+    return baseStyles;
+  }};
+`;
+
+const StatusButton = styled(SecondaryButton)<Props>`
   ${({ $dataType }) => {
     switch ($dataType) {
       case DataType.CONCEPT:
@@ -438,6 +520,8 @@ export default {
   DataSourceDetail,
   DataSourceDetails,
   DatasetItemControls,
+  StatusBadge,
+  StatusButton,
   HarvestButton,
   EditButton,
   ValidateLink,

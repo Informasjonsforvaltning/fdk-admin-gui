@@ -13,9 +13,46 @@ import {
   REMOVE_DATA_SOURCE_REQUESTED
 } from './action-types';
 
-import { DataSource, HarvestStatus } from '../../../types';
+import { DataSource, HarvestCurrentState } from '../../../types';
 
 const { FDK_HARVEST_ADMIN_HOST } = env;
+
+function* fetchStatusForDataSource(
+  authorization: string,
+  dataSource: DataSource
+) {
+  try {
+    const { id, publisherId } = dataSource;
+    const { data, status } = yield call(
+      axios.get,
+      `${FDK_HARVEST_ADMIN_HOST}/organizations/${publisherId}/datasources/${id}/status`,
+      {
+        headers: { authorization }
+      }
+    );
+    if (status === 200 && Array.isArray(data)) {
+      yield put(
+        actions.fetchDataSourceStatusSucceeded(
+          id,
+          data as HarvestCurrentState[]
+        )
+      );
+    }
+  } catch {
+    // Silently ignore per-datasource failures; status will remain undefined
+  }
+}
+
+function* fetchStatusesForDataSources(
+  authorization: string,
+  dataSources: DataSource[]
+) {
+  yield all(
+    dataSources.map((ds: DataSource) =>
+      call(fetchStatusForDataSource, authorization, ds)
+    )
+  );
+}
 
 function* fetchDataSourcesRequested() {
   try {
@@ -31,7 +68,9 @@ function* fetchDataSourcesRequested() {
       }
     );
     if (Array.isArray(data)) {
-      yield put(actions.fetchDataSourcesSucceeded(data as DataSource[]));
+      const dataSources = data as DataSource[];
+      yield put(actions.fetchDataSourcesSucceeded(dataSources));
+      yield* fetchStatusesForDataSources(authorization, dataSources);
     } else {
       yield put(actions.fetchDataSourcesFailed(JSON.stringify(message)));
     }
@@ -155,12 +194,19 @@ function* harvestStatusRequested({
   payload: { id, org }
 }: ReturnType<typeof actions.harvestStatusRequested>) {
   try {
+    const auth = yield getContext('auth');
+    const authorization = yield call([auth, auth.getAuthorizationHeader]);
     const { data, message, status } = yield call(
       axios.get,
-      `${FDK_HARVEST_ADMIN_HOST}/organizations/${org}/datasources/${id}/status`
+      `${FDK_HARVEST_ADMIN_HOST}/organizations/${org}/datasources/${id}/status`,
+      {
+        headers: { authorization }
+      }
     );
-    if (status === 200) {
-      yield put(actions.harvestStatusSucceeded(data as HarvestStatus));
+    if (status === 200 && Array.isArray(data)) {
+      yield put(
+        actions.harvestStatusSucceeded(id, data as HarvestCurrentState[])
+      );
     } else {
       yield put(actions.harvestStatusFailed(JSON.stringify(message)));
     }
