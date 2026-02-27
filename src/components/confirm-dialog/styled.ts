@@ -15,6 +15,9 @@ const ConfirmDialog = styled.div`
 `;
 
 const ModalHeading = styled.h1`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-size: 120%;
   font-weight: 500;
 `;
@@ -52,6 +55,18 @@ const Modal = styled.div`
   }
 `;
 
+const CloseButton = styled.button`
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  background: none;
+  border: none;
+
+  & > svg {
+    width: 100%;
+  }
+`;
+
 const CancelButton = styled(ButtonBase)`
   color: ${theme.colour(Colour.NEUTRAL, 'N60')};
 
@@ -66,5 +81,6 @@ export default {
   ModalHeading,
   ModalActions,
   Text,
-  CancelButton
+  CancelButton,
+  CloseButton
 };
