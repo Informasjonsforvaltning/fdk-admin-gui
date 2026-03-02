@@ -5,12 +5,11 @@ import Button, { Variant } from '@fellesdatakatalog/button';
 
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
 import CloseIcon from '@material-ui/icons/Close';
-
-import Skeleton from 'react-loading-skeleton';
 
 import { getServiceMessages } from '../../../../api/cms/service-message';
 
@@ -51,6 +50,8 @@ interface Props {
   harvestStatus?: HarvestCurrentState[];
   datasourceStatuses: Record<string, HarvestCurrentState[]>;
   snackbarVariant?: SnackbarVariant;
+  saveError: string | null;
+  saveSucceeded: boolean;
   dataSourceActions: typeof DataSourceActions;
   organizations: Organization[];
   organizationActions: typeof OrganizationActions;
@@ -75,13 +76,16 @@ const DataSourcesPage: FC<Props> = ({
   harvestStatus,
   datasourceStatuses,
   snackbarVariant,
+  saveError,
+  saveSucceeded,
   dataSourceActions: {
     fetchDataSourcesRequested,
     registerDataSourceRequested,
     updateDataSourceRequested,
     removeDataSourceRequested,
     harvestDataSourceRequested,
-    harvestStatusRequested
+    harvestStatusRequested,
+    clearSaveStatus
   },
   organizations,
   organizationActions: { fetchOrganizationsRequested },
@@ -136,6 +140,7 @@ const DataSourcesPage: FC<Props> = ({
 
   const showDataSourceItemEditor = (id?: string, organizationId?: string) => {
     document.body.classList.add('no-scroll');
+    clearSaveStatus();
     setShowEditor(true);
     setDataSourceId(id ?? null);
     setDataSourceOrg(organizationId ?? null);
@@ -154,6 +159,7 @@ const DataSourcesPage: FC<Props> = ({
 
   const hideSnackbar = () => {
     setSnackbarOpen(false);
+    clearSaveStatus();
   };
 
   const showConfirm = (id: string, organizationId: string) => {
@@ -181,7 +187,6 @@ const DataSourcesPage: FC<Props> = ({
     } else {
       registerDataSourceRequested(dataSource);
     }
-    hideDataSourceItemEditor();
     fetchOrganizationsRequested();
   };
 
@@ -268,6 +273,29 @@ const DataSourcesPage: FC<Props> = ({
   const dataSource = filteredDataSources.find(({ id }) => id === dataSourceId);
 
   const SnackbarContent = () => {
+    if (saveError) {
+      return (
+        <SC.SnackbarContent
+          type='save:error'
+          message={
+            <span className='message'>
+              <ErrorIcon />
+              {saveError}
+            </span>
+          }
+          action={[
+            <IconButton
+              key='close'
+              aria-label='close'
+              color='inherit'
+              onClick={hideSnackbar}
+            >
+              <CloseIcon />
+            </IconButton>
+          ]}
+        />
+      );
+    }
     if (snackbarVariant) {
       const { Icon, message } = snackbarVariants[snackbarVariant];
       return (
@@ -300,6 +328,19 @@ const DataSourcesPage: FC<Props> = ({
       showSnackbar();
     }
   }, [snackbarVariant]);
+
+  useEffect(() => {
+    if (saveError) {
+      showSnackbar();
+    }
+  }, [saveError]);
+
+  useEffect(() => {
+    if (saveSucceeded) {
+      hideDataSourceItemEditor();
+      clearSaveStatus();
+    }
+  }, [saveSucceeded]);
 
   useEffect(() => {
     let intervalId: number | undefined;
@@ -349,7 +390,12 @@ const DataSourcesPage: FC<Props> = ({
               <SC.AddIcon /> Legg til datakilde
             </Button>
           </SC.ButtonBar>
-          {fetchingDataSources && <Skeleton width={730} height={280} />}
+          {fetchingDataSources && (
+            <SC.LoadingSpinner>
+              <CircularProgress size={48} />
+              <span>Laster datakilder …</span>
+            </SC.LoadingSpinner>
+          )}
           {!fetchingDataSources &&
             filteredDataSources.length > 0 &&
             filteredDataSources.map(dataSourceItem => (
@@ -379,7 +425,7 @@ const DataSourcesPage: FC<Props> = ({
             </SC.NoResults>
           )}
         </SC.DataSourcesContent>
-        {snackbarVariant && snackbarOpen && (
+        {(snackbarVariant || saveError) && snackbarOpen && (
           <Snackbar
             anchorOrigin={{
               vertical: 'bottom',

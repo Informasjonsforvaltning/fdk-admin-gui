@@ -44,7 +44,6 @@ const DataSourceItemEditor: FC<Props> = ({
   onDiscard,
   values,
   isValid,
-  isSubmitting,
   handleChange,
   handleBlur,
   handleSubmit,
@@ -322,7 +321,7 @@ const DataSourceItemEditor: FC<Props> = ({
               <Button
                 type='submit'
                 variant={Variant.PRIMARY}
-                disabled={!isValid || isSubmitting}
+                disabled={!isValid}
               >
                 Lagre
               </Button>
