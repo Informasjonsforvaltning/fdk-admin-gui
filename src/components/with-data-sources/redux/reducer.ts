@@ -11,11 +11,14 @@ import {
   HARVEST_DATA_SOURCE_FAILED,
   HARVEST_DATA_SOURCE_REQUESTED,
   REGISTER_DATA_SOURCE_SUCCEEDED,
+  REGISTER_DATA_SOURCE_FAILED,
   UPDATE_DATA_SOURCE_SUCCEEDED,
+  UPDATE_DATA_SOURCE_FAILED,
   REMOVE_DATA_SOURCE_SUCCEEDED,
   HARVEST_STATUS_REQUESTED,
   HARVEST_STATUS_SUCCEEDED,
-  HARVEST_STATUS_FAILED
+  HARVEST_STATUS_FAILED,
+  CLEAR_SAVE_STATUS
 } from './action-types';
 
 import { Actions } from '../../../types';
@@ -25,7 +28,9 @@ const initialState = fromJS({
   organizations: [],
   harvestStatus: undefined,
   datasourceStatuses: {},
-  snackbarVariant: undefined
+  snackbarVariant: undefined,
+  saveError: null,
+  saveSucceeded: false
 });
 
 export default function reducer(
@@ -43,17 +48,33 @@ export default function reducer(
     case FETCH_DATA_SOURCES_FAILED:
       return state.set('dataSources', fromJS([])).set('isFetching', false);
     case REGISTER_DATA_SOURCE_SUCCEEDED:
-      return state.update('dataSources', (dataSources: any) =>
-        dataSources.push(fromJS(action.payload.dataSource))
-      );
-    case UPDATE_DATA_SOURCE_SUCCEEDED:
-      return state.update('dataSources', (dataSources: any) =>
-        dataSources.map((dataSource: any) =>
-          dataSource.get('id') === action.payload.dataSource.id
-            ? fromJS(action.payload.dataSource)
-            : dataSource
+      return state
+        .update('dataSources', (dataSources: any) =>
+          dataSources.push(fromJS(action.payload.dataSource))
         )
-      );
+        .set('saveError', null)
+        .set('saveSucceeded', true);
+    case REGISTER_DATA_SOURCE_FAILED:
+      return state
+        .set('saveError', action.payload.message)
+        .set('saveSucceeded', false);
+    case UPDATE_DATA_SOURCE_SUCCEEDED:
+      return state
+        .update('dataSources', (dataSources: any) =>
+          dataSources.map((dataSource: any) =>
+            dataSource.get('id') === action.payload.dataSource.id
+              ? fromJS(action.payload.dataSource)
+              : dataSource
+          )
+        )
+        .set('saveError', null)
+        .set('saveSucceeded', true);
+    case UPDATE_DATA_SOURCE_FAILED:
+      return state
+        .set('saveError', action.payload.message)
+        .set('saveSucceeded', false);
+    case CLEAR_SAVE_STATUS:
+      return state.set('saveError', null).set('saveSucceeded', false);
     case REMOVE_DATA_SOURCE_SUCCEEDED:
       return state
         .update('dataSources', (dataSources: any) =>

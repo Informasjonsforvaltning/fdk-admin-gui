@@ -130,7 +130,12 @@ function* registerDataSourceRequested({
       yield put(actions.registerDataSourceFailed(JSON.stringify(message)));
     }
   } catch (e: any) {
-    yield put(actions.registerDataSourceFailed(e.message));
+    const status = e.response?.status;
+    const message =
+      status === 409
+        ? 'Det finnes allerede en datakilde med denne URL-en.'
+        : 'Kunne ikke registrere datakilde.';
+    yield put(actions.registerDataSourceFailed(message));
   }
 }
 
@@ -164,7 +169,12 @@ function* updateDataSourceRequested({
       yield put(actions.updateDataSourceFailed(JSON.stringify(message)));
     }
   } catch (e: any) {
-    yield put(actions.updateDataSourceFailed(e.message));
+    const status = e.response?.status;
+    const message =
+      status === 409
+        ? 'Det finnes allerede en datakilde med denne URL-en.'
+        : 'Kunne ikke lagre datakilde.';
+    yield put(actions.updateDataSourceFailed(message));
   }
 }
 

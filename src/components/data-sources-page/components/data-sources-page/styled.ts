@@ -33,7 +33,7 @@ const SnackbarContent = styled(BaseSnackbarContent)<{ type: string }>`
   }
 
   ${({ type }) =>
-    type === 'harvest:error' &&
+    (type === 'harvest:error' || type === 'save:error') &&
     css`
       background: #d70a5a !important;
     `}
@@ -62,6 +62,18 @@ const Title = styled.h1`
       font-size: ${theme.fontSize('FS24')};
     }
   }
+`;
+
+const LoadingSpinner = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: ${theme.spacing('S16')};
+  padding: ${theme.spacing('S48')};
+  min-height: 200px;
+  color: ${theme.colour(Colour.NEUTRAL, 'N60')};
+  font-size: ${theme.fontSize('FS16')};
 `;
 
 const NoResultsItem = styled.div`
@@ -96,6 +108,7 @@ export default {
   ButtonBar,
   AddIcon,
   Title,
+  LoadingSpinner,
   NoResults,
   NoResultsItem
 };

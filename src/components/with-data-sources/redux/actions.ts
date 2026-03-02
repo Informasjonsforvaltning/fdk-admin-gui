@@ -18,7 +18,8 @@ import {
   REMOVE_DATA_SOURCE_SUCCEEDED,
   UPDATE_DATA_SOURCE_FAILED,
   UPDATE_DATA_SOURCE_REQUESTED,
-  UPDATE_DATA_SOURCE_SUCCEEDED
+  UPDATE_DATA_SOURCE_SUCCEEDED,
+  CLEAR_SAVE_STATUS
 } from './action-types';
 
 import type { DataSource, HarvestCurrentState } from '../../../types';
@@ -186,6 +187,12 @@ export function updateDataSourceFailed(message: string) {
     payload: {
       message
     }
+  };
+}
+
+export function clearSaveStatus() {
+  return {
+    type: CLEAR_SAVE_STATUS
   };
 }
 
