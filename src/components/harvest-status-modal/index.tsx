@@ -42,6 +42,7 @@ const DATA_TYPE_LABELS: Record<string, string> = {
 
 interface ExternalProps {
   name?: string;
+  dataSourceId?: string;
   harvestStates?: HarvestCurrentState[];
   onDiscard: () => void;
 }
@@ -73,7 +74,12 @@ const formatLocalDateTime = (value?: string) => {
   });
 };
 
-const HarvestStatusModal: FC<Props> = ({ name, harvestStates, onDiscard }) => {
+const HarvestStatusModal: FC<Props> = ({
+  name,
+  dataSourceId,
+  harvestStates,
+  onDiscard
+}) => {
   const hasHarvestStates = !!harvestStates && harvestStates.length > 0;
 
   return (
@@ -112,6 +118,12 @@ const HarvestStatusModal: FC<Props> = ({ name, harvestStates, onDiscard }) => {
                 </SC.StatusHeader>
 
                 <SC.StatusTable>
+                  {dataSourceId && (
+                    <SC.StatusRow>
+                      <SC.StatusLabel>Datakilde-ID</SC.StatusLabel>
+                      <SC.StatusValue>{dataSourceId}</SC.StatusValue>
+                    </SC.StatusRow>
+                  )}
                   {state.currentPhase && (
                     <SC.StatusRow>
                       <SC.StatusLabel>Fase</SC.StatusLabel>

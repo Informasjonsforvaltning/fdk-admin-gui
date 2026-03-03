@@ -448,6 +448,7 @@ const DataSourcesPage: FC<Props> = ({
         {showHarvestStatusModal && (
           <HarvestStatusModal
             name={dataSources.find(ds => ds.id === dataSourceId)?.description}
+            dataSourceId={dataSourceId ?? undefined}
             harvestStates={harvestStatus}
             onDiscard={hideDataSourceItemHarvestStatus}
           />
