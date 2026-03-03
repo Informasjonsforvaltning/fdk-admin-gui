@@ -75,20 +75,15 @@ const formatLocalDateTime = (value?: string) => {
 
 const HarvestStatusModal: FC<Props> = ({ name, harvestStates, onDiscard }) => {
   const hasHarvestStates = !!harvestStates && harvestStates.length > 0;
-  const anyInProgress = hasHarvestStates
-    ? harvestStates.some(state => state.status === 'IN_PROGRESS')
-    : false;
 
   return (
     <SC.HarvestStatusModal>
       <SC.Modal>
         <SC.ModalHeading>{name}</SC.ModalHeading>
-        {anyInProgress && (
-          <SC.RefreshRow>
-            <CircularProgress size={16} thickness={5} />
-            <span>Oppdaterer status hvert 5. sekund …</span>
-          </SC.RefreshRow>
-        )}
+        <SC.RefreshRow>
+          <CircularProgress size={16} thickness={5} />
+          <span>Oppdaterer status hvert 5. sekund …</span>
+        </SC.RefreshRow>
         {hasHarvestStates &&
           harvestStates.map(state => {
             const displayStatus = STATUS_LABELS[state.status] ?? state.status;
@@ -116,32 +111,49 @@ const HarvestStatusModal: FC<Props> = ({ name, harvestStates, onDiscard }) => {
                   </SC.StatusChip>
                 </SC.StatusHeader>
 
-                {state.currentPhase && (
-                  <SC.Text>
-                    {`Fase: ${
-                      PHASE_LABELS[state.currentPhase.toLowerCase()] ??
-                      state.currentPhase
-                    }`}
-                  </SC.Text>
-                )}
-                {phaseStartedAtLocal && (
-                  <SC.Text>{`Fase startet: ${phaseStartedAtLocal}`}</SC.Text>
-                )}
-                {updatedAtLocal && (
-                  <SC.Text>{`Sist oppdatert: ${updatedAtLocal}`}</SC.Text>
-                )}
-                {state.errorMessage && (
-                  <SC.Text>{`Feilmelding: ${state.errorMessage}`}</SC.Text>
-                )}
-                {(state.totalResources != null ||
-                  state.processedResources != null ||
-                  state.remainingResources != null) && (
-                  <SC.Text>
-                    {`Ressurser: ${state.processedResources ?? 0}/${
-                      state.totalResources ?? 0
-                    } (${state.remainingResources ?? 0} gjenstår)`}
-                  </SC.Text>
-                )}
+                <SC.StatusTable>
+                  {state.currentPhase && (
+                    <SC.StatusRow>
+                      <SC.StatusLabel>Fase</SC.StatusLabel>
+                      <SC.StatusValue>
+                        {PHASE_LABELS[state.currentPhase.toLowerCase()] ??
+                          state.currentPhase}
+                      </SC.StatusValue>
+                    </SC.StatusRow>
+                  )}
+                  {phaseStartedAtLocal && (
+                    <SC.StatusRow>
+                      <SC.StatusLabel>Fase startet</SC.StatusLabel>
+                      <SC.StatusValue>{phaseStartedAtLocal}</SC.StatusValue>
+                    </SC.StatusRow>
+                  )}
+                  {updatedAtLocal && (
+                    <SC.StatusRow>
+                      <SC.StatusLabel>Sist oppdatert</SC.StatusLabel>
+                      <SC.StatusValue>{updatedAtLocal}</SC.StatusValue>
+                    </SC.StatusRow>
+                  )}
+                  {state.errorMessage && (
+                    <SC.StatusRow $isError>
+                      <SC.StatusLabel>Feilmelding</SC.StatusLabel>
+                      <SC.StatusValue $isError>
+                        {state.errorMessage}
+                      </SC.StatusValue>
+                    </SC.StatusRow>
+                  )}
+                  {(state.totalResources != null ||
+                    state.processedResources != null ||
+                    state.remainingResources != null) && (
+                    <SC.StatusRow>
+                      <SC.StatusLabel>Ressurser</SC.StatusLabel>
+                      <SC.StatusValue>
+                        {`${state.processedResources ?? 0}/${
+                          state.totalResources ?? 0
+                        } (${state.remainingResources ?? 0} gjenstår)`}
+                      </SC.StatusValue>
+                    </SC.StatusRow>
+                  )}
+                </SC.StatusTable>
               </SC.HarvestStatus>
             );
           })}

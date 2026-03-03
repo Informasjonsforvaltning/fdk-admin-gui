@@ -63,6 +63,38 @@ const StatusHeader = styled.div`
   margin-bottom: 4px;
 `;
 
+const StatusTable = styled.div`
+  display: grid;
+  grid-template-columns: minmax(120px, 180px) 1fr;
+  column-gap: 12px;
+  row-gap: 4px;
+  margin-top: 4px;
+`;
+
+const StatusRow = styled.div<{ $isError?: boolean }>`
+  display: contents;
+`;
+
+const StatusLabel = styled.div`
+  font-size: ${theme.fontSize('FS12')};
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: ${theme.colour(Colour.NEUTRAL, 'N60')};
+`;
+
+const StatusValue = styled.div<{ $isError?: boolean }>`
+  font-size: ${theme.fontSize('FS14')};
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  ${({ $isError }) =>
+    $isError &&
+    css`
+      color: #c62828;
+    `};
+`;
+
 const StatusChip = styled.span<{ $hasError?: boolean }>`
   display: inline-flex;
   align-items: center;
@@ -121,6 +153,10 @@ export default {
   Text,
   RefreshRow,
   StatusHeader,
+  StatusTable,
+  StatusRow,
+  StatusLabel,
+  StatusValue,
   StatusChip,
   StatusTitle,
   CancelButton
