@@ -1,4 +1,4 @@
-import { fromJS } from 'immutable';
+import { fromJS, Map } from 'immutable';
 
 import * as actions from './actions';
 import { UPDATE_FILTER_SUCCEEDED } from './action-types';
@@ -7,7 +7,7 @@ import { Actions } from '../../../types';
 
 const initialState = fromJS({
   filter: {}
-});
+}) as Map<string, any>;
 
 export default function reducer(
   state = initialState,

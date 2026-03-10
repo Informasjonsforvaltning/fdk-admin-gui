@@ -1,4 +1,4 @@
-import { fromJS } from 'immutable';
+import { fromJS, Map } from 'immutable';
 
 import * as actions from './actions';
 import {
@@ -11,7 +11,7 @@ import { Actions } from '../../../types';
 
 const initialState = fromJS({
   delegatees: []
-});
+}) as Map<string, any>;
 
 export default function reducer(
   state = initialState,

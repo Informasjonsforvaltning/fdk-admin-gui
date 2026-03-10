@@ -1,4 +1,4 @@
-import { fromJS } from 'immutable';
+import { fromJS, Map } from 'immutable';
 
 import * as actions from './actions';
 import {
@@ -31,7 +31,7 @@ const initialState = fromJS({
   snackbarVariant: undefined,
   saveError: null,
   saveSucceeded: false
-});
+}) as Map<string, any>;
 
 export default function reducer(
   state = initialState,
