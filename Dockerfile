@@ -15,7 +15,8 @@ RUN npm run build:prod
 
 FROM nginx:alpine
 WORKDIR /app
-RUN addgroup -g 1001 -S app && \
+RUN apk upgrade --no-cache zlib && \
+  addgroup -g 1001 -S app && \
   adduser -u 1001 -S app -G app && \
   chown -R app:app /app && \
   chown -R app:app /var/cache/nginx && \
