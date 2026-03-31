@@ -454,15 +454,27 @@ const DataSourcesPage: FC<Props> = ({
           />
         )}
         {showConfirmModal && (
-          <ConfirmDialog
-            title='Slett datakilde'
-            text='Velg hva som skal skje med ressursene som er høstet fra denne datakilden.'
-            onConfirm={removeDataSourceAndRemoveAllResources}
-            onCancel={hideConfirm}
-            confirmLabel='Slett og fjern alle ressurser'
-            secondaryActionLabel='Slett, men behold ressurser'
-            onSecondaryAction={removeDataSourceAndKeepResources}
-          />
+          <>
+            {hasSystemAdminPermission ? (
+              <ConfirmDialog
+                title='Slett datakilde'
+                text='Velg hva som skal skje med ressursene som er høstet fra denne datakilden.'
+                onConfirm={removeDataSourceAndRemoveAllResources}
+                onCancel={hideConfirm}
+                confirmLabel='Slett og fjern alle ressurser'
+                secondaryActionLabel='Slett, men behold ressurser'
+                onSecondaryAction={removeDataSourceAndKeepResources}
+              />
+            ) : (
+              <ConfirmDialog
+                title='Slett datakilde'
+                text='Hvis datakilden slettes vil også alle ressurser fjernes fra søket i Data.norge.no.'
+                onConfirm={removeDataSourceAndRemoveAllResources}
+                onCancel={hideConfirm}
+                confirmLabel='Slett og fjern alle ressurser'
+              />
+            )}
+          </>
         )}
       </SC.Container>
     </SC.DataSourcesPage>
