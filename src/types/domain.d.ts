@@ -9,6 +9,7 @@ export interface DataSource {
   description: string;
   acceptHeaderValue: MimeType | null;
   authHeader: AuthHeader | null;
+  active: boolean;
 }
 
 export interface Delegatee {

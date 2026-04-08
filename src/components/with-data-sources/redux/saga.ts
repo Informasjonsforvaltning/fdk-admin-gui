@@ -10,7 +10,9 @@ import {
   HARVEST_STATUS_REQUESTED,
   REGISTER_DATA_SOURCE_REQUESTED,
   UPDATE_DATA_SOURCE_REQUESTED,
-  REMOVE_DATA_SOURCE_REQUESTED
+  REMOVE_DATA_SOURCE_REQUESTED,
+  ACTIVATE_DATA_SOURCE_REQUESTED,
+  DEACTIVATE_DATA_SOURCE_REQUESTED
 } from './action-types';
 
 import { DataSource, HarvestCurrentState } from '../../../types';
@@ -228,6 +230,54 @@ function* harvestStatusRequested({
   }
 }
 
+function* activateDataSourceRequested({
+  payload: { id, org }
+}: ReturnType<typeof actions.activateDataSourceRequested>) {
+  try {
+    const auth = yield getContext('auth');
+    const authorization = yield call([auth, auth.getAuthorizationHeader]);
+    const { data, status } = yield call(
+      axios.post,
+      `${FDK_HARVEST_ADMIN_HOST}/organizations/${org}/datasources/${id}/activate`,
+      undefined,
+      { headers: { authorization } }
+    );
+    if (status === 200) {
+      yield put(actions.activateDataSourceSucceeded(data as DataSource));
+    } else {
+      yield put(
+        actions.activateDataSourceFailed('Kunne ikke aktivere datakilde.')
+      );
+    }
+  } catch (e: any) {
+    yield put(actions.activateDataSourceFailed(e.message));
+  }
+}
+
+function* deactivateDataSourceRequested({
+  payload: { id, org }
+}: ReturnType<typeof actions.deactivateDataSourceRequested>) {
+  try {
+    const auth = yield getContext('auth');
+    const authorization = yield call([auth, auth.getAuthorizationHeader]);
+    const { data, status } = yield call(
+      axios.post,
+      `${FDK_HARVEST_ADMIN_HOST}/organizations/${org}/datasources/${id}/deactivate`,
+      undefined,
+      { headers: { authorization } }
+    );
+    if (status === 200) {
+      yield put(actions.deactivateDataSourceSucceeded(data as DataSource));
+    } else {
+      yield put(
+        actions.deactivateDataSourceFailed('Kunne ikke deaktivere datakilde.')
+      );
+    }
+  } catch (e: any) {
+    yield put(actions.deactivateDataSourceFailed(e.message));
+  }
+}
+
 export default function* saga() {
   yield all([
     takeLatest(FETCH_DATA_SOURCES_REQUESTED, fetchDataSourcesRequested),
@@ -235,6 +285,8 @@ export default function* saga() {
     takeLatest(HARVEST_STATUS_REQUESTED, harvestStatusRequested),
     takeLatest(REGISTER_DATA_SOURCE_REQUESTED, registerDataSourceRequested),
     takeLatest(UPDATE_DATA_SOURCE_REQUESTED, updateDataSourceRequested),
-    takeLatest(REMOVE_DATA_SOURCE_REQUESTED, removeDataSourceRequested)
+    takeLatest(REMOVE_DATA_SOURCE_REQUESTED, removeDataSourceRequested),
+    takeLatest(ACTIVATE_DATA_SOURCE_REQUESTED, activateDataSourceRequested),
+    takeLatest(DEACTIVATE_DATA_SOURCE_REQUESTED, deactivateDataSourceRequested)
   ]);
 }

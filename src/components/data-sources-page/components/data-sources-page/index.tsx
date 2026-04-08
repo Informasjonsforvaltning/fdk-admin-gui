@@ -85,7 +85,9 @@ const DataSourcesPage: FC<Props> = ({
     removeDataSourceRequested,
     harvestDataSourceRequested,
     harvestStatusRequested,
-    clearSaveStatus
+    clearSaveStatus,
+    activateDataSourceRequested,
+    deactivateDataSourceRequested
   },
   organizations,
   organizationActions: { fetchOrganizationsRequested },
@@ -191,10 +193,24 @@ const DataSourcesPage: FC<Props> = ({
   };
 
   const harvestDataSourceItem = (id: string, organizationId: string) => {
+    const ds = dataSources.find(s => s.id === id);
+    if (ds && ds.active === false) return;
     harvestDataSourceRequested(id, organizationId, {
       removeAll: false,
       forced: true
     });
+  };
+
+  const toggleDataSourceActive = (
+    id: string,
+    organizationId: string,
+    currentlyActive: boolean
+  ) => {
+    if (currentlyActive) {
+      deactivateDataSourceRequested(id, organizationId);
+    } else {
+      activateDataSourceRequested(id, organizationId);
+    }
   };
 
   const showDataSourceItemHarvestStatus = (
@@ -408,6 +424,7 @@ const DataSourcesPage: FC<Props> = ({
                 onDataSourceHarvestStatus={showDataSourceItemHarvestStatus}
                 onDataSourceItemEdit={showDataSourceItemEditor}
                 onDataSourceItemRemove={showConfirm}
+                onDataSourceToggleActive={toggleDataSourceActive}
               />
             ))}
           {!fetchingDataSources && filteredDataSources.length === 0 && (
@@ -449,6 +466,9 @@ const DataSourcesPage: FC<Props> = ({
           <HarvestStatusModal
             name={dataSources.find(ds => ds.id === dataSourceId)?.description}
             dataSourceId={dataSourceId ?? undefined}
+            dataSourceIsActive={
+              dataSources.find(ds => ds.id === dataSourceId)?.active
+            }
             harvestStates={harvestStatus}
             onDiscard={hideDataSourceItemHarvestStatus}
           />

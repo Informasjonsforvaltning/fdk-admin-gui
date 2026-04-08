@@ -18,7 +18,9 @@ import {
   HARVEST_STATUS_REQUESTED,
   HARVEST_STATUS_SUCCEEDED,
   HARVEST_STATUS_FAILED,
-  CLEAR_SAVE_STATUS
+  CLEAR_SAVE_STATUS,
+  ACTIVATE_DATA_SOURCE_SUCCEEDED,
+  DEACTIVATE_DATA_SOURCE_SUCCEEDED
 } from './action-types';
 
 import { Actions } from '../../../types';
@@ -109,6 +111,15 @@ export default function reducer(
         );
     case HARVEST_STATUS_FAILED:
       return state.set('harvestStatus', undefined);
+    case ACTIVATE_DATA_SOURCE_SUCCEEDED:
+    case DEACTIVATE_DATA_SOURCE_SUCCEEDED:
+      return state.update('dataSources', (dataSources: any) =>
+        dataSources.map((dataSource: any) =>
+          dataSource.get('id') === action.payload.dataSource.id
+            ? fromJS(action.payload.dataSource)
+            : dataSource
+        )
+      );
     default:
       return state;
   }

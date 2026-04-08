@@ -22,7 +22,7 @@ import withOrganizations from '../with-organizations';
 
 import * as OrganizationActions from '../with-organizations/redux/actions';
 
-interface FormValues extends Omit<DataSource, 'id'> {}
+interface FormValues extends Omit<DataSource, 'id' | 'active'> {}
 
 interface ExternalProps {
   dataSource?: Partial<DataSource>;
@@ -358,7 +358,11 @@ const formikConfig: WithFormikConfig<Props, FormValues> = {
   }),
   handleSubmit: (values, { props: { onSave, dataSource } }) =>
     onSave(
-      { id: dataSource?.id ?? '', ...values },
+      {
+        id: dataSource?.id ?? '',
+        active: dataSource?.active ?? true,
+        ...values
+      },
       dataSource?.publisherId ?? values.publisherId,
       !!dataSource
     ),

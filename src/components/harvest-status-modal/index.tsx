@@ -43,6 +43,7 @@ const DATA_TYPE_LABELS: Record<string, string> = {
 interface ExternalProps {
   name?: string;
   dataSourceId?: string;
+  dataSourceIsActive?: boolean;
   harvestStates?: HarvestCurrentState[];
   onDiscard: () => void;
 }
@@ -77,6 +78,7 @@ const formatLocalDateTime = (value?: string) => {
 const HarvestStatusModal: FC<Props> = ({
   name,
   dataSourceId,
+  dataSourceIsActive,
   harvestStates,
   onDiscard
 }) => {
@@ -87,8 +89,14 @@ const HarvestStatusModal: FC<Props> = ({
       <SC.Modal>
         <SC.ModalHeading>{name}</SC.ModalHeading>
         <SC.RefreshRow>
-          <CircularProgress size={16} thickness={5} />
-          <span>Oppdaterer status hvert 5. sekund …</span>
+          {dataSourceIsActive ? (
+            <>
+              <CircularProgress size={16} thickness={5} />
+              <span>Oppdaterer status hvert 5. sekund …</span>
+            </>
+          ) : (
+            <span>Høsting er deaktivert</span>
+          )}
         </SC.RefreshRow>
         {hasHarvestStates &&
           harvestStates.map(state => {
