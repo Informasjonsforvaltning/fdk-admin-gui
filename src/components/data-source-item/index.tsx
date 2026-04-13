@@ -189,8 +189,17 @@ const DataSourceItem: FC<Props> = ({
           onClick={() => setShowActivateConfirm(true)}
           $dataType={dataType}
         >
-          {isActive ? <PowerOffIcon /> : <PowerIcon />}
-          {isActive ? 'Deaktiver' : 'Aktiver'}
+          {isActive ? (
+            <>
+              <PowerOffIcon />
+              Deaktiver
+            </>
+          ) : (
+            <>
+              <PowerIcon />
+              Aktiver
+            </>
+          )}
         </SC.ActivateButton>
         <SC.TertiaryButton
           onClick={() => onDataSourceItemRemove(id, publisherId)}
