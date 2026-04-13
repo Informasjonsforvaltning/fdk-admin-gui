@@ -19,7 +19,13 @@ import {
   UPDATE_DATA_SOURCE_FAILED,
   UPDATE_DATA_SOURCE_REQUESTED,
   UPDATE_DATA_SOURCE_SUCCEEDED,
-  CLEAR_SAVE_STATUS
+  CLEAR_SAVE_STATUS,
+  ACTIVATE_DATA_SOURCE_REQUESTED,
+  ACTIVATE_DATA_SOURCE_SUCCEEDED,
+  ACTIVATE_DATA_SOURCE_FAILED,
+  DEACTIVATE_DATA_SOURCE_REQUESTED,
+  DEACTIVATE_DATA_SOURCE_SUCCEEDED,
+  DEACTIVATE_DATA_SOURCE_FAILED
 } from './action-types';
 
 import type { DataSource, HarvestCurrentState } from '../../../types';
@@ -221,5 +227,47 @@ export function removeDataSourceFailed(message: string) {
     payload: {
       message
     }
+  };
+}
+
+export function activateDataSourceRequested(id: string, org: string) {
+  return {
+    type: ACTIVATE_DATA_SOURCE_REQUESTED,
+    payload: { id, org }
+  };
+}
+
+export function activateDataSourceSucceeded(dataSource: DataSource) {
+  return {
+    type: ACTIVATE_DATA_SOURCE_SUCCEEDED,
+    payload: { dataSource }
+  };
+}
+
+export function activateDataSourceFailed(message: string) {
+  return {
+    type: ACTIVATE_DATA_SOURCE_FAILED,
+    payload: { message }
+  };
+}
+
+export function deactivateDataSourceRequested(id: string, org: string) {
+  return {
+    type: DEACTIVATE_DATA_SOURCE_REQUESTED,
+    payload: { id, org }
+  };
+}
+
+export function deactivateDataSourceSucceeded(dataSource: DataSource) {
+  return {
+    type: DEACTIVATE_DATA_SOURCE_SUCCEEDED,
+    payload: { dataSource }
+  };
+}
+
+export function deactivateDataSourceFailed(message: string) {
+  return {
+    type: DEACTIVATE_DATA_SOURCE_FAILED,
+    payload: { message }
   };
 }

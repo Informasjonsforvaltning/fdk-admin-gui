@@ -8,9 +8,11 @@ import { DataType } from '../../types/enums';
 interface Props {
   $dataType?: DataType | null;
   $hasError?: boolean;
+  $inactive?: boolean;
 }
 
-const DataSourceItem = styled.li`
+const DataSourceItem = styled.li<Props>`
+  position: relative;
   display: flex;
   align-items: center;
   min-height: 170px;
@@ -22,6 +24,19 @@ const DataSourceItem = styled.li`
   :nth-of-type(n + 2) {
     margin-top: 15px;
   }
+
+  ${({ $inactive }) =>
+    $inactive &&
+    css`
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: rgba(255, 255, 255, 0.45);
+        border-radius: 5px;
+        pointer-events: none;
+      }
+    `}
 `;
 
 const DataSourceType = styled.div<Props>`
@@ -516,6 +531,78 @@ const TertiaryButton = styled(ButtonBase)<Props>`
   }
 `;
 
+const ActivateButton = styled(SecondaryButton)<Props>`
+  position: relative;
+  z-index: 1;
+
+  ${({ $dataType }) => {
+    switch ($dataType) {
+      case DataType.CONCEPT:
+        return css`
+          background: #d5edf2;
+          color: #2e6773;
+          & > svg > path {
+            fill: #2e6773;
+          }
+        `;
+      case DataType.DATASERVICE:
+        return css`
+          background: #f2e1d5;
+          color: #805333;
+          & > svg > path {
+            fill: #805333;
+          }
+        `;
+      case DataType.DATASET:
+        return css`
+          background: #d5e1f2;
+          color: #335380;
+          & > svg > path {
+            fill: #335380;
+          }
+        `;
+      case DataType.INFORMATION_MODEL:
+        return css`
+          background: #e4d5f2;
+          color: #593380;
+          & > svg > path {
+            fill: #593380;
+          }
+        `;
+      case DataType.PUBLIC_SERVICE:
+        return css`
+          background: #f2d5e1;
+          color: #803353;
+          & > svg > path {
+            fill: #803353;
+          }
+        `;
+      default:
+        return css``;
+    }
+  }};
+
+  &:hover,
+  &:focus {
+    color: ${theme.colour(Colour.NEUTRAL, 'N0')};
+    & > svg > path {
+      fill: ${theme.colour(Colour.NEUTRAL, 'N0')};
+    }
+  }
+`;
+
+const InactiveBadge = styled.span`
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: ${theme.fontSize('FS14')};
+  font-weight: ${theme.fontWeight('FW500')};
+  margin-right: 10px;
+  background: #fff3e0;
+  color: #e65100;
+`;
+
 export default {
   DataSourceItem,
   DataSourceType,
@@ -530,5 +617,7 @@ export default {
   HarvestButton,
   EditButton,
   ValidateLink,
-  TertiaryButton
+  TertiaryButton,
+  ActivateButton,
+  InactiveBadge
 };
