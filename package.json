@@ -58,6 +58,7 @@
     }
   },
   "overrides": {
+    "websocket-driver": "^0.7.5",
     "axios": "^1.15.2",
     "flatted": ">=3.4.0",
     "form-data": "^4.0.4",
