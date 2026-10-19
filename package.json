@@ -59,7 +59,7 @@
   },
   "overrides": {
     "websocket-driver": "^0.7.5",
-    "axios": "^1.18.0",
+    "axios": "^1.20.0",
     "flatted": ">=3.4.0",
     "form-data": "^4.0.4",
     "lodash": "^4.18.1",
@@ -69,12 +69,15 @@
     "fast-uri": "^3.1.6",
     "@babel/plugin-transform-modules-systemjs": "^7.29.4",
     "uuid": "^11.1.1",
-    "shell-quote": "^1.9.0",
+    "shell-quote": "^1.11.0",
     "js-yaml": "^4.3.2",
     "svgo": "^3.3.5",
-    "brace-expansion@^1.0.0": "^1.1.16",
-    "brace-expansion@^2.0.0": "^2.1.2",
-    "browserslist": "^4.28.7"
+    "brace-expansion@^1.0.0": "^1.1.21",
+    "brace-expansion@^2.0.0": "^2.1.7",
+    "browserslist": "^4.28.7",
+    "proxy-addr": "^2.0.8",
+    "compression": "^1.8.2",
+    "source-map-js": "^1.2.2"
   },
   "dependencies": {
     "@fellesdatakatalog/alert": "^0.1.10",
@@ -86,7 +89,7 @@
     "@fellesdatakatalog/theme": "^0.4.4",
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.2",
-    "axios": "^1.18.0",
+    "axios": "^1.20.0",
     "core-js": "^3.28.0",
     "focus-trap-react": "^10.0.0",
     "formik": "^2.2.9",
