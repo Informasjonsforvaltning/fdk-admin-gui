@@ -78,7 +78,8 @@
     "proxy-addr": "^2.0.8",
     "compression": "^1.8.2",
     "source-map-js": "^1.2.2",
-    "follow-redirects": "^1.16.1"
+    "follow-redirects": "^1.16.1",
+    "launch-editor": "^2.14.2"
   },
   "dependencies": {
     "@fellesdatakatalog/alert": "^0.1.10",
